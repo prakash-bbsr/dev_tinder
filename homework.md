@@ -14,4 +14,7 @@
 - .gitignore
 - create a remort repo on github
 - pish all code to remote origin
-- testing
+- play with rout extension
+- Order of the rout matter
+- install postman and test the Api
+- Write logic for all http methods GET,POST,DELETE,PATCH,PUT methods.
