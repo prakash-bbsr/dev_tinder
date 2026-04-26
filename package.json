@@ -1,0 +1,27 @@
+{
+  "name": "dev_tinder",
+  "version": "1.0.0",
+  "description": "tinder for dev",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prakash-bbsr/dev_tinder.git"
+  },
+  "keywords": [
+    "nodejs",
+    "javascript"
+  ],
+  "author": "Prakash Chandra Nayak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prakash-bbsr/dev_tinder/issues"
+  },
+  "homepage": "https://github.com/prakash-bbsr/dev_tinder#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
