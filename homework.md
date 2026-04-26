@@ -14,3 +14,4 @@
 - .gitignore
 - create a remort repo on github
 - pish all code to remote origin
+- testing
