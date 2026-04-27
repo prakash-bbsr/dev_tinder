@@ -18,3 +18,18 @@
 - Order of the rout matter
 - install postman and test the Api
 - Write logic for all http methods GET,POST,DELETE,PATCH,PUT methods.
+- Explorer different routing with regular expression and character (?,*,+,())
+- Use of regx 
+-Reading the query parameter in the routes
+-Reading the Dynamic routes
+
+-Multiple Route Handler- Play with Code
+-Next()
+-Next function and error along with res.send()
+-app.use("route",rh,[rh1,rh2],rh3);
+-What is a middleware? why do we need it?
+-How express js basically handel requests behind the scenes
+-Difference between app.use and app.all
+-Write a dummy auth middleware for admin
+-Write a dummy middleware for all users routes,except user/login
+-
