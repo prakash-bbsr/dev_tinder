@@ -1,12 +1,47 @@
 const express = require("express");
+//Mogodb Databse connection
+const {connectDB} = require('./config/database');
 const app = express();
+
+const User = require("./models/user");
+//Middleware is used to convert JSON object to javascript Object.
+app.use(express.json()); 
+//Registered a user
+app.post('/signUp',async (req,res,next)=>{
+  console.log((req.body));
+  try{      
+      const user = new User(req.body);
+      await user.save();
+      res.send("Data inserted Successfully");
+   } catch (err){
+    if (err.code === 11000) {
+      return res.status(400).send("Email already exists");
+    }
+    res.status(500).send(err.message);
+   }
+});
+
+connectDB()
+  .then(() =>{
+    console.log ("Databse connection established...");
+    app.listen(3000,()=>{
+      console.log("Server is ready to listen port 3000");
+    });
+  })
+  .catch((err)=>{
+    console.error("database cannot be connected!");
+  });
+
+
+
+
 // Handel Auth Middleware  for all GET,POST ...... REQUESTS
-const { adminAuth,userAuth } = require("./middlewares/auth");
+//const { adminAuth,userAuth } = require("./middlewares/auth");
 //Call adminAuth middle to check authorization access. It matches prefix path /admin ,/admin/profile,/admin.info etc
-app.use("/admin", adminAuth);
+//app.use("/admin", adminAuth);
 
 //All Matches the exact path . /admin/profile only
-app.all("/admin/profile",(req,res)=>{
+/*app.all("/admin/profile",(req,res)=>{
   res.status(401).send("User is not Authorised");
   //res.send("Showing Admin Profile");
 });
@@ -23,9 +58,25 @@ app.get('/user',userAuth,(req,res,next) => {
   res.send("user Data Sent");
 });
 //Login url without userAuth middleware 
-app.get('/user/login',(req,res)=>{
+app.get('/user/login',(req,res)=> {
   res.send("User Login Successfully");
 });
+
+//Error handeling
+app.get('/getUserData',(req,res) =>{
+  try{
+    throw new error('adsghajgdajgadsj');
+    res.send("User Data");
+  }catch(err){
+    //res.status(500).send(err.message);
+    res.status(500).send('This is custom error');
+  }  
+});
+
+//Global Error
+app.use('/',(err,req,res,next)=>{
+  res.status(500).send('Something Went Wrong');
+});*/
 
 /*app.use("/admin",(req,res,next)=>{
  const token ="123456789";
@@ -77,10 +128,8 @@ app.patch("/user",(req,res)=>{
   res.send("Hello listen request2");
 });*/
 
-app.listen(3000,()=>{
+/*app.listen(3000,()=>{
     console.log("Server is ready to listen port 3000");
-});
-
-
+});*/
 
 console.log("Starting a new project");

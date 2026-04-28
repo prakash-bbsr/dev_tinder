@@ -32,4 +32,15 @@
 -Difference between app.use and app.all
 -Write a dummy auth middleware for admin
 -Write a dummy middleware for all users routes,except user/login
--
+-Error handeling
+-Wildcard error handeling (it should be in end od the code)
+
+- Create a free cluster on MongoDB official website (Mongo Atlas)
+- Install mongoose library
+- Connect your application to the databse "Connection-Url"/dev_Tinder
+- Call the connectionDB function and connect to databse before starting application on 3000 port
+- Create a userSchema & user model
+- Create POSt /Signup API to add Data to database
+- Push some document using API call from the postman
+- Error Handeling using tray and catch
+- Add Dynamic data for signup api from the postman
