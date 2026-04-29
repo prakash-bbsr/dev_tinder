@@ -44,3 +44,22 @@
 - Push some document using API call from the postman
 - Error Handeling using tray and catch
 - Add Dynamic data for signup api from the postman
+- user.findOne with duplicate data and make sure which records will return
+- Api getUserByEmail()
+- Api feed -get all users data
+- Api get user by id
+
+-Delete user
+-Update user
+-Explore Model Document
+-What are the options in model.findOneAndUpdate method and explorer
+-Api -Update the record using email id
+
+-Explore schematype option from the documentation
+-add require,unique,lowercase,min,minlength,trim
+-Add default
+-create a custom validate function for gender
+-imporve the dv schema - put all appro
+
+-Api Level Validate in patch and signup Request
+-Api Validation for each field

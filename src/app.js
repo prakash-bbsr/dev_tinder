@@ -20,6 +20,106 @@ app.post('/signUp',async (req,res,next)=>{
     res.status(500).send(err.message);
    }
 });
+/**
+ * @Purpose Get Records from the databse
+ */
+app.get("/feed",async (req,res)=>{
+  try{
+    const userData = await User.find({}).sort({ createdAt: -1 });
+    if(userData.length===0){
+       res.send("Records not found");      
+    }else{
+       res.send(userData);
+    }   
+  }catch(err){
+    res.status(500).send(err.message);
+  }
+});
+/**
+ * @purpose Get a Single Records
+ */
+app.get("/getUserByEmail",async (req,res)=>{
+  try{
+    const userEmail = req.body.emailId;
+    
+    const userData = await User.findOne({"emailId":userEmail});
+    //const userData = await User.findById(userEmail,'age firstName emailId');
+
+    if(userData){
+      console.log(userData.fullName);
+      res.send(userData);
+    }else{
+      res.send("Record is not found");
+    }
+  }catch(err){
+    res.status(400).send("Somethis is Wrong",err.message);
+  }
+});
+/**
+ * @purpose Deleted user Data
+ */
+app.delete("/user",async(req,res)=>{
+  try{
+    const userId = req.body.id;
+    console.log(userId);
+    const userDelete = await User.findByIdAndDelete(userId);
+    console.log(userDelete);
+    if(userDelete){
+      res.send("User is deleted Successfully");
+    }else{
+      res.send("User is not deleted Successfully");
+    }
+  }catch(err){
+    res.status(400).send("Something is wrong");
+  }
+});
+/**
+ * @purpose Update the API Document
+ */
+app.patch("/user",async(req,res)=>{
+  try{
+      const userId = req.body.id;
+      const obj = req.body;
+      //For Update need to set runValidators:true for updating the validation
+      const updateUser = await User.findByIdAndUpdate(userId,obj,{ returnDocument: 'after',runValidators:true });
+      if (updateUser) {
+        return res.status(200).json({
+          message: "User updated successfully",
+          data: updateUser
+        });
+      } else {
+        return res.status(404).json({
+          message: "User not found"
+        });
+    }
+  }catch(err){
+    res.status(400).send("Something Wend Wrong"+err.message);
+  }
+})
+/**
+ * @purpose update user using put method
+ * findOneAndReplace function is used to update the whole document
+ */
+app.put("/user",async(req,res)=>{
+  try{
+      const userId = req.body.id;
+      const obj = req.body;
+      //const updateUser = await User.findOneAndReplace({ _id: userId },obj);
+      const updateUser = await User.findOneAndUpdate({ _id: userId },obj);      
+      if (updateUser) {
+        return res.status(200).json({
+          message: "User updated successfully",
+          data: updateUser
+        });
+      } else {
+        return res.status(404).json({
+          message: "User not found"
+        });
+    }
+  }catch(err){
+    res.status(400).send("Something Wend Wrong");
+  }
+})
 
 connectDB()
   .then(() =>{
