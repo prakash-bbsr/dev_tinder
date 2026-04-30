@@ -62,4 +62,11 @@
 -imporve the dv schema - put all appro
 
 -Api Level Validate in patch and signup Request
--Api Validation for each field
+-Data Sanitization Api Validation for each field
+-install validator
+-Explore the validator library
+-never trust request.body data. we should validate data
+
+-Validate data in Signup API
+-Install bcrypt package
+-Create PasswordHash using bcrypt.hash & save the user is encrypted password

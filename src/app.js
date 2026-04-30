@@ -2,23 +2,80 @@ const express = require("express");
 //Mogodb Databse connection
 const {connectDB} = require('./config/database');
 const app = express();
-
+const validator = require("validator");
 const User = require("./models/user");
+const {validateSignUp} = require("./utils/validation");
+const bcrypt = require("bcrypt");
 //Middleware is used to convert JSON object to javascript Object.
 app.use(express.json()); 
 //Registered a user
 app.post('/signUp',async (req,res,next)=>{
   console.log((req.body));
   try{      
+      // Need to use validator method so that we can check all inputs before updating into the databse.
+      validateSignUp(req.body);
+      //Keep Password data
+      const {password} = req.body;
+      const passwordhash = await bcrypt.hash(password,10);
+      console.log(passwordhash);
+      req.body.password = passwordhash;
       const user = new User(req.body);
       await user.save();
-      res.send("Data inserted Successfully");
+      res.status(201).json({
+        success: true,
+        message: "User created successfully",
+        data: user
+      });
+      //res.send("Data inserted Successfully");
    } catch (err){
+    console.log("Exception is occured");
     if (err.code === 11000) {
-      return res.status(400).send("Email already exists");
+      //return res.status(400).send("Email already exists");
+      return res.status(400).json({
+        success: false,
+        message: "Email already exists"
+      });
     }
-    res.status(500).send(err.message);
+     if (err.name === "ValidationError") {
+      console.log("validation error checking");
+      return res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
+    //res.status(500).send(err.message);
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
    }
+});
+//Login Function
+app.post("/login",async(req,res) => {
+  try{
+    const {emailId,password} = req.body;
+    //Get records from the databse
+    const records = await User.findOne({'emailId':emailId});
+    if(!records){
+      throw new Error("Invalid Credentials");
+    }   
+    //Password check
+    const passwordCheck =  await bcrypt.compare(password,records.password);   
+    if(!passwordCheck){
+      throw new Error ("Invalid Credentials");
+    }else{
+      res.status(200).json({
+        success: true,
+        message: "User logged in successfully",
+      });
+    }   
+    //res.send("Login successfully");
+  } catch (err){
+    res.status(500).json({
+        success: false,
+        message: err.message
+      });
+  }
 });
 /**
  * @Purpose Get Records from the databse
@@ -76,10 +133,26 @@ app.delete("/user",async(req,res)=>{
 /**
  * @purpose Update the API Document
  */
-app.patch("/user",async(req,res)=>{
+app.patch("/user/:userId",async(req,res)=>{
   try{
-      const userId = req.body.id;
+      const userId = req.params?.userId;
       const obj = req.body;
+      //Need to add validation allow some fields to update
+      const ALLOWED_UPDATE = ["firstName","lastName","photoUrl","age","skills"];
+      const isUpdateAllowed = Object.keys(obj).every((k)=>
+        ALLOWED_UPDATE.includes(k)
+      );
+      if(!isUpdateAllowed){
+        //res.status(400).send("Update not allowed");
+        return res.status(400).json({
+          success: false,
+          message: "Update not allowed"
+        });
+      }
+      //Check Skillset not allow to add more than 10
+      if(obj?.skillset?.length > 10){
+        throw new Error("Skillset Can't be more than 10");
+      }
       //For Update need to set runValidators:true for updating the validation
       const updateUser = await User.findByIdAndUpdate(userId,obj,{ returnDocument: 'after',runValidators:true });
       if (updateUser) {
