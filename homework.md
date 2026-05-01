@@ -84,3 +84,15 @@
 -Add the userAuth middleware in profile Api and new sendconnection Api
 -Set the expiry of jwt token and cookies to 7 days
 
+-Create userSchma method to getJWT()
+-Create userschema method to veryfy password verification
+
+-Explore Tinder APIS
+-Create a list all API
+-Group multiple routes under respective 
+
+-Read document of express.router
+-Create routes folder for managing auth,profile,request router
+-create authRouter,ProfileRouter,RequestRouter
+-Import there routers in app.js 
+

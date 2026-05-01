@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema({
     firstName:{
         type:String,
@@ -83,6 +85,21 @@ const userSchema = new mongoose.Schema({
     timestamps: true,
     toJSON: { virtuals: true },     
 });
+//Schema method for creating jwt tokan
+userSchema.methods.getJwt = async function(){
+    const user = this;
+    //{ expiresIn: "1d" }
+    const jwtToken = await jwt.sign({_id:user._id},"secret_key12345",{ expiresIn: 60 * 60 });
+    return jwtToken;
+};
+//Schema Method to validate password
+userSchema.methods.validatePassword = async function(userEnterPassword){
+    const user = this;
+    const passwordHash = user.password;
+    const isPasswordMatched = await bcrypt.compare(userEnterPassword,passwordHash);
+    return isPasswordMatched;
+
+};
 // Or by using the virtual method as following:
 userSchema.virtual('fullName').get(function() {
   return this.firstName + ' ' + this.lastName;

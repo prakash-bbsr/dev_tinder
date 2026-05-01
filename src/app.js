@@ -4,138 +4,26 @@ const {connectDB} = require('./config/database');
 const app = express();
 const validator = require("validator");
 const User = require("./models/user");
-const {validateSignUp} = require("./utils/validation");
-const bcrypt = require("bcrypt");
+//const {validateSignUp} = require("./utils/validation");
+//const bcrypt = require("bcrypt");
+
 const cookieParser = require("cookie-parser");
-const jwt = require("jsonwebtoken");
+//const jwt = require("jsonwebtoken");
 const { adminAuth,userAuth } = require("./middlewares/auth");
+
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
 //Middleware is used to convert JSON object to javascript Object.
 app.use(express.json()); 
 app.use(cookieParser());
-//Registered a user
-app.post('/signUp',async (req,res,next)=>{
-  console.log((req.body));
-  try{      
-      // Need to use validator method so that we can check all inputs before updating into the databse.
-      validateSignUp(req.body);
-      //Keep Password data
-      const {password} = req.body;
-      const passwordhash = await bcrypt.hash(password,10);
-      console.log(passwordhash);
-      req.body.password = passwordhash;
-      const user = new User(req.body);
-      await user.save();
-      res.status(201).json({
-        success: true,
-        message: "User created successfully",
-        data: user
-      });
-      //res.send("Data inserted Successfully");
-   } catch (err){
-    console.log("Exception is occured");
-    if (err.code === 11000) {
-      //return res.status(400).send("Email already exists");
-      return res.status(400).json({
-        success: false,
-        message: "Email already exists"
-      });
-    }
-     if (err.name === "ValidationError") {
-      console.log("validation error checking");
-      return res.status(400).json({
-        success: false,
-        message: err.message
-      });
-    }
-    //res.status(500).send(err.message);
-    res.status(500).json({
-      success: false,
-      message: err.message
-    });
-   }
-});
-//Login Function
-app.post("/login",async(req,res) => {
-  try{
-    const {emailId,password} = req.body;
-    //Get records from the databse
-    const records = await User.findOne({'emailId':emailId});
-    if(!records){
-      throw new Error("Invalid Credentials");
-    }   
-    //Password check
-    const passwordCheck =  await bcrypt.compare(password,records.password);   
-    
-    if(!passwordCheck){
-      throw new Error ("Invalid Credentials password check");
-    }else{
-      //Create JWT token
-      const token = await jwt.sign({_id:records._id},"secret_key12345",{ expiresIn: 60 * 60 });
-      console.log("JwtToken is ="+token);
-      //set jwt token to cookies
-      res.cookie('token',token,{expires:new Date(Date.now()+8 * 360000)}); //360000 milli seconds
-      
-      res.status(200).json({
-        success: true,
-        message: "User logged in successfully",
-      });
-    }   
-    //res.send("Login successfully");
-  } catch (err){
-    res.status(500).json({
-        success: false,
-        message: err.message
-      });
-  }
-});
-/**
- * Get User Profile data
- */
-app.get("/profile",async (req,res) =>{
-  try{
-    const readCookies = req.cookies;
-    const {token} = readCookies;
-    if(!token){
-      throw new Error("InValid Token");
-    }
-    //Add logic to verify token if success get the profile date otherwise redirect to login page.
-    //console.log(readCookies);
-    //validate token as per the secret key
-    //{ expiresIn: '1d' }
-    const decodedMessage = jwt.verify(token,'secret_key12345',{ expiresIn: 60 * 60 });
-    console.log(decodedMessage);
-    const {_id} = decodedMessage;
-    //get data as per cookies
-    const userData = await User.findById(_id);
-    if(!userData){
-      throw new error('UserId is not found');
-    }
-    res.status(200).send(userData);
-  }catch(err){
-    res.status(400).send(err.message);
-  }
-});
-//Profile with middleware
-app.get("/profileWithMiddleware",userAuth,async (req,res) =>{
-  try{
-    console.log("Come under profileWithMiddleware");
-   const userData = req.userData    
-    res.status(200).send(userData);
-  }catch(err){
-    res.status(400).send(err.message);
-  }
-});
 
-//Send Connection API
-app.post("/sendNewConnection",userAuth,async(req,res)=>{
-  try{
-    const userData =req.userData;
-    console.log("Send connection request");
-    res.send(userData.firstName +" is sending Connection Request send Successfully");
-  }catch(err){
-    res.status(400).send(err.message);
-  }
-});
+app.use("/",authRouter);
+app.use("/",profileRouter);
+app.use("/",requestRouter);
+
+
+
 /**
  * @Purpose Get Records from the databse
  */
