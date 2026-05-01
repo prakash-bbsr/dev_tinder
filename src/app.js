@@ -6,8 +6,12 @@ const validator = require("validator");
 const User = require("./models/user");
 const {validateSignUp} = require("./utils/validation");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+const { adminAuth,userAuth } = require("./middlewares/auth");
 //Middleware is used to convert JSON object to javascript Object.
 app.use(express.json()); 
+app.use(cookieParser());
 //Registered a user
 app.post('/signUp',async (req,res,next)=>{
   console.log((req.body));
@@ -61,9 +65,16 @@ app.post("/login",async(req,res) => {
     }   
     //Password check
     const passwordCheck =  await bcrypt.compare(password,records.password);   
+    
     if(!passwordCheck){
-      throw new Error ("Invalid Credentials");
+      throw new Error ("Invalid Credentials password check");
     }else{
+      //Create JWT token
+      const token = await jwt.sign({_id:records._id},"secret_key12345",{ expiresIn: 60 * 60 });
+      console.log("JwtToken is ="+token);
+      //set jwt token to cookies
+      res.cookie('token',token,{expires:new Date(Date.now()+8 * 360000)}); //360000 milli seconds
+      
       res.status(200).json({
         success: true,
         message: "User logged in successfully",
@@ -75,6 +86,54 @@ app.post("/login",async(req,res) => {
         success: false,
         message: err.message
       });
+  }
+});
+/**
+ * Get User Profile data
+ */
+app.get("/profile",async (req,res) =>{
+  try{
+    const readCookies = req.cookies;
+    const {token} = readCookies;
+    if(!token){
+      throw new Error("InValid Token");
+    }
+    //Add logic to verify token if success get the profile date otherwise redirect to login page.
+    //console.log(readCookies);
+    //validate token as per the secret key
+    //{ expiresIn: '1d' }
+    const decodedMessage = jwt.verify(token,'secret_key12345',{ expiresIn: 60 * 60 });
+    console.log(decodedMessage);
+    const {_id} = decodedMessage;
+    //get data as per cookies
+    const userData = await User.findById(_id);
+    if(!userData){
+      throw new error('UserId is not found');
+    }
+    res.status(200).send(userData);
+  }catch(err){
+    res.status(400).send(err.message);
+  }
+});
+//Profile with middleware
+app.get("/profileWithMiddleware",userAuth,async (req,res) =>{
+  try{
+    console.log("Come under profileWithMiddleware");
+   const userData = req.userData    
+    res.status(200).send(userData);
+  }catch(err){
+    res.status(400).send(err.message);
+  }
+});
+
+//Send Connection API
+app.post("/sendNewConnection",userAuth,async(req,res)=>{
+  try{
+    const userData =req.userData;
+    console.log("Send connection request");
+    res.send(userData.firstName +" is sending Connection Request send Successfully");
+  }catch(err){
+    res.status(400).send(err.message);
   }
 });
 /**
