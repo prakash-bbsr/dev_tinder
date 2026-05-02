@@ -148,9 +148,9 @@ connectDB()
       console.log("Server is ready to listen port 3000");
     });
   })
-  .catch((err)=>{
-    console.error("database cannot be connected!");
-  });
+ .catch((err)=>{
+  console.error("database cannot be connected!", err);
+});
 
 
 

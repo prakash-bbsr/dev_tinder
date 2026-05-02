@@ -31,10 +31,10 @@ profileRouter.get("/profile",async (req,res) =>{
   }
 });
 //Profile with middleware
-profileRouter.get("/profileWithMiddleware",userAuth,async (req,res) =>{
+profileRouter.get("/profile/view",userAuth,async (req,res) =>{
   try{
-    console.log("Come under profileWithMiddleware");
-   const userData = req.userData    
+   console.log("Come under profileWithMiddleware");
+   const userData = req.userData       
     res.status(200).send(userData);
   }catch(err){
     res.status(400).send(err.message);

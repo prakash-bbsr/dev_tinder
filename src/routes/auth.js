@@ -61,7 +61,7 @@ authRouter.post("/login",async(req,res) => {
       });
     }
     //Get records from the databse
-    const records = await User.findOne({'emailId':emailId});
+    const records = await User.findOne({'emailId':emailId}).select("+password");
     if(!records){
       return res.status(401).json({
         success: false,
@@ -103,7 +103,7 @@ authRouter.post("/login",async(req,res) => {
       });
   }
 });
-authRouter.post("logout",async(req,res) =>{
+authRouter.post("/logout",async(req,res) =>{
     res.clearCookie("token", {
         httpOnly: true,
         secure: true,
