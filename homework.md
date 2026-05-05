@@ -101,3 +101,15 @@
 -Create Patch /Profile/Password API (Forgot Password API)
 -Make you validate all data in evry POST and PATCH apis
 
+-Create a connectionRequest Schema
+-Add Proper validation
+-Send Connection Request API
+-Do proper validation
+-$or query and $and query in mongoose
+-Read article about compound index of mongodb
+-Read more about index
+-Why do we need index
+-What is the advantage and disadvantages for creating index
+-Schema.pre() function
+-Read mongodb logical query pattern
+

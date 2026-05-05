@@ -46,13 +46,17 @@ const userSchema = new mongoose.Schema({
     gender:{
         type:String,
         lowercase:true,
+        enum:{
+            values:["male","female","other"],
+            message:`{VALUE} is incorrect status type`
+        },
         //enum: ['male', 'female', 'other']
-        validate(value){
+        /*validate(value){
             const val = value.toLowerCase();
             if(!["male","female","others"].includes(val)){
                 throw new Error("gender data is not valid")
             }
-        }
+        }*/
     },
     photoUrl:{
         type:String,
@@ -81,6 +85,12 @@ const userSchema = new mongoose.Schema({
         state: { type: String, trim: true },
         postalCode: { type: String, trim: true,match: [/^\d{6}$/, "Postal code must be 6 digits"] },
         country: { type: String, trim: true }
+    },
+    resetToken: {
+        type: String,
+    },
+    resetTokenExpire: {
+            type: Date,
     },
 },{ 
     timestamps: true,
