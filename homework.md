@@ -113,3 +113,7 @@
 -Schema.pre() function
 -Read mongodb logical query pattern
 
+-Write code with proper validation connectedRequest Accept/Reject API's
+-Thought process-POST vs GET
+-Read about ref and populate https://mongoos
+-Create an API  /user/request/received with all

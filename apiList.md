@@ -9,15 +9,17 @@
     PATCH /profile/password
 
 ### connectionRequestRouter
-    POST /request/send/interested/:userId
-    POST /requested/send/ignored/:userId
-    POST /request/review/accepted/:requestId
-    POST /request/review/rejected/:requestId
+    POST /request/send/:status/:userId
+    Note: Status is either interested,ignored
 
+    POST /request/review/:status/:requestId
+    Note:- Status is either accepted,rejected
 ### userRouter
-    Get /user/feed
-    POST /user/sendConnection
     GET /user/connection
+    GET /user/requests
+    Get /user/feed
+    
+   
 
 
 Status: ignore,interested,accepted,rejected
