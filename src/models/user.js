@@ -93,7 +93,10 @@ const userSchema = new mongoose.Schema({
     resetTokenExpire: {
             type: Date,
     },
-},{ 
+},
+  {
+    id: false
+  },{ 
     timestamps: true,
     toJSON: { virtuals: true },     
 });

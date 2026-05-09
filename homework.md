@@ -117,3 +117,11 @@
 -Thought process-POST vs GET
 -Read about ref and populate https://mongoos
 -Create an API  /user/request/received with all
+
+-Create GET /user/connections API
+
+-Logic for GET /feed Api
+-Explorer the $nin,$and and $ne and other query operation
+
+ GET /feed?page=1&limit=10
+ .skip() & limit()
