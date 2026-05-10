@@ -89,10 +89,22 @@ authRouter.post("/login",async(req,res) => {
         secure: true,
         sameSite: "strict"
       });
-      
+      // Step 3: send safe data
+      const safeUser = {
+        _id: records._id,
+        firstName: records.firstName,
+        lastName: records.lastName,
+        emailId: records.emailId,
+        gender: records.gender,
+        photoUrl: records.photoUrl,
+        dob: records.dob,
+        skillset: records.skillset
+      };
+
       res.status(200).json({
         success: true,
         message: "User logged in successfully",
+        data: safeUser
       });
     }   
     //res.send("Login successfully");
