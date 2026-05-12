@@ -35,7 +35,7 @@ const validateSignUp = (data)=>{
 const validatorEditProfileData = (req) =>{
   //Check allowed field to edit
   const obj = req.body;
-  const ALLOWED_UPDATE_FIELDs = ["firstName","lastName","age","skillset"];  
+  const ALLOWED_UPDATE_FIELDs = ["firstName","lastName","age","skillset","gender","photoUrl"];  
   const isEditAllowed = Object.keys(obj).every((field) => {
     return ALLOWED_UPDATE_FIELDs.includes(field);
   });
@@ -45,6 +45,7 @@ const validatorEditProfileData = (req) =>{
     firstName,
     lastName,
     age,
+    gender,
     skillset
   } = obj;
     if(!firstName || validator.isEmpty(firstName)){

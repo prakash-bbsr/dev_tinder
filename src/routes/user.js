@@ -3,7 +3,7 @@ const userRouter = express.Router();
 const User = require("../models/user");
 const ConnectionRequest = require("../models/connectionRequest");
 const {userAuth } = require("../middlewares/auth");
-const USER_SAFE_DATA = "firstName lastName _id";
+const USER_SAFE_DATA = "firstName lastName age photoUrl _id";
 /**
  * This API returns all received connection request of a login user.Login user either accept the connection request or reject the connection request
  */
