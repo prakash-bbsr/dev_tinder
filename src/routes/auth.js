@@ -19,11 +19,21 @@ authRouter.post('/signUp',async (req,res,next)=>{
         password: passwordhash
      };
       const user = new User(userData);
-      await user.save();
-      res.status(201).json({
+      const saveUser = await user.save();
+      const token = await saveUser.getJwt();
+      console.log("JwtToken is ="+token);
+      //set jwt token to cookies
+      //res.cookie('token',token,{expires:new Date(Date.now()+8 * 360000)}); //360000 milli seconds
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict"
+      });
+      res.status(200).json({
         success: true,
         message: "User created successfully",
-        data: user
+        data: saveUser
       });
       //res.send("Data inserted Successfully");
    } catch (err){
@@ -84,7 +94,7 @@ authRouter.post("/login",async(req,res) => {
       //set jwt token to cookies
       //res.cookie('token',token,{expires:new Date(Date.now()+8 * 360000)}); //360000 milli seconds
       res.cookie("token", token, {
-        expires: new Date(Date.now() + 8 * 360000),
+        expires: new Date(Date.now() + 8 * 3600000),
         httpOnly: true,
         secure: true,
         sameSite: "strict"
