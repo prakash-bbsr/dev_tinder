@@ -27,7 +27,7 @@ authRouter.post('/signUp',async (req,res,next)=>{
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
         httpOnly: true,
-        secure: true,
+        secure: false,
         sameSite: "strict"
       });
       res.status(200).json({
@@ -96,7 +96,7 @@ authRouter.post("/login",async(req,res) => {
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
         httpOnly: true,
-        secure: true,
+        secure: false,
         sameSite: "strict"
       });
       // Step 3: send safe data
