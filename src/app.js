@@ -18,9 +18,23 @@ const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 const cors = require('cors')
 //White listing the specific domain name
-app.use(cors({
+/*app.use(cors({
   origin: 'http://localhost:5173',
   credentials:true
+}));*/
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://13.232.94.216"
+];
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
 //Middleware is used to convert JSON object to javascript Object.
 app.use(express.json()); 
