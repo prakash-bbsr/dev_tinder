@@ -20,7 +20,7 @@ profileRouter.get("/profile",async (req,res) =>{
     //console.log(readCookies);
     //validate token as per the secret key
     //{ expiresIn: '1d' }
-    const decodedMessage = jwt.verify(token,'secret_key12345',{ expiresIn: 60 * 60 });
+    const decodedMessage = jwt.verify(token,process.env.JWT_SECRET,{ expiresIn: 60 * 60 });
     console.log(decodedMessage);
     const {_id} = decodedMessage;
     //get data as per cookies

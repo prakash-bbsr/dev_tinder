@@ -34,7 +34,7 @@ const userAuth = async (req,res,next) => {
            return res.status(401).json({ message: 'Token not found' });
         }
         //Validate jwt token
-        const DecodeToken = jwt.verify(token,"secret_key12345");
+        const DecodeToken = jwt.verify(token,process.env.JWT_SECRET);
         const {_id} = DecodeToken;
         const userData = await User.findById(_id);
         if(!userData){

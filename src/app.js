@@ -1,4 +1,9 @@
-require("dotenv").config();
+//require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config({
+  path: `.env.${process.env.NODE_ENV || "development"}`
+});
+
 const express = require("express");
 //Mogodb Databse connection
 const {connectDB} = require('./config/database');

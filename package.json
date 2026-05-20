@@ -4,8 +4,8 @@
   "description": "tinder for dev",
   "main": "index.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "start": "set NODE_ENV=production&& node src/app.js",
+    "dev": "set NODE_ENV=development&& nodemon src/app.js"
   },
   "repository": {
     "type": "git",
