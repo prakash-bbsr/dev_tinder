@@ -22,6 +22,7 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 const cors = require('cors')
+require("./utils/cron");
 //White listing the specific domain name
 /*app.use(cors({
   origin: 'http://localhost:5173',
