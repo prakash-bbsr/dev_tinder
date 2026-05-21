@@ -3,6 +3,7 @@ const requestRouter = express.Router();
 const { adminAuth,userAuth } = require("../middlewares/auth");
 const User = require("../models/user");
 const ConnectionRequest = require("../models/connectionRequest");
+const sendEmail = require("../utils/sendEmail");
 //Send Connection API
 requestRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>{
   try{
@@ -51,6 +52,10 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>{
       fromUserId,toUserId,status
     });
     const data = await connectionRequest.save();
+    console.log("Prakash is in connection section");
+    //Send Email using AWS SES
+    const mailRes = await sendEmail.run();
+    console.log(mailRes);
     res.status(200).json({
       status: "success",
       message: req.userData.firstName + " is " + status + " " + checkTouserExist.firstName,
