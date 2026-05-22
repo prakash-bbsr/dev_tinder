@@ -54,7 +54,7 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>{
     const data = await connectionRequest.save();
     console.log("Prakash is in connection section");
     //Send Email using AWS SES
-    const mailRes = await sendEmail.run();
+    const mailRes = await sendEmail.run("This is subject","This is the mail body");
     console.log(mailRes);
     res.status(200).json({
       status: "success",
