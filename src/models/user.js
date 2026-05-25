@@ -93,6 +93,13 @@ const userSchema = new mongoose.Schema({
     resetTokenExpire: {
             type: Date,
     },
+    isPremium:{
+        type:Boolean,
+        default:false,
+    },
+    membershipType:{
+        type:String,        
+    }
 },
   {
     id: false
