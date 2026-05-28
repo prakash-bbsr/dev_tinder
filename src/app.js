@@ -22,7 +22,14 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 const paymentRouter = require("./routes/payment");
+//Socket for chat application
+const initializeSocket = require("./utils/socket");
 const cors = require('cors')
+//Socket for chat application
+const http = require("http");
+const server = http.createServer(app);
+initializeSocket(server);
+//End of chart section
 require("./utils/cron");
 //White listing the specific domain name
 /*app.use(cors({
@@ -174,7 +181,8 @@ app.put("/user",async(req,res)=>{
 connectDB()
   .then(() =>{
     console.log ("Databse connection established...");
-    app.listen(3000,()=>{
+    //Server instead of app for socket connection
+    server.listen(3000,()=>{
       console.log("Server is ready to listen port 3000");
     });
   })
